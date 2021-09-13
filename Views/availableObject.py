@@ -1,27 +1,11 @@
-from tkinter import Tk, Frame, Button, LEFT, Label
-from PIL import Image, ImageTk
+from Models.ObjectModel import ObjectModel
 
 def GetAvailableObject():
-    import os
-    path = os.path.abspath(r"Controllers\image\2.jpg")
-    frameContent = Frame()
-    sourcePhoto = Image.open(path)
-    photo = sourcePhoto.resize((200, 200))
-
-    photoTK = ImageTk.PhotoImage(photo)
-
-    for i in range(2):
-        for j in range(10):
-            objFrame = Frame(frameContent)
-
-            imageObject = Label(objFrame, image=photoTK)
-
-            imageObject.pack()
-
-            Label(objFrame, text="Объект 1").pack()
-
-            Button(objFrame, text="Подробнее", fg="white", bg="black").pack()
-
-            objFrame.grid(row=i, column=j)
-
-    return frameContent
+    objects = (ObjectModel((1, "Кто-то 1", 10, r'.\Controllers\image\1.jpg')),
+               ObjectModel((2, "Кто-то 2", 321, r'.\Controllers\image\2.jpg')),
+               ObjectModel((3, "Кто-то 3", 423, r'.\Controllers\image\3.jpg')),
+               ObjectModel((4, "Кто-то 4", 453, r'.\Controllers\image\4.jpg')),
+               ObjectModel((5, "Кто-то 5", 345, r'.\Controllers\image\5.jpg')),
+               ObjectModel((6, "Кто-то 6", 234, r'.\Controllers\image\6.jpg')),
+               ObjectModel((7, "Кто-то 7", 654, r'.\Controllers\image\7.jpg')))
+    return objects

@@ -1,7 +1,61 @@
-from tkinter import Tk, Frame, Button, LEFT
+import math
+from tkinter import Tk, Frame, Button, LEFT, Label, Toplevel
+
+from PIL import Image, ImageTk
+
 from Views.profileResident import GetProfileFrame
 from Views.ListResidentObject import GetResidentObject
 from Views.availableObject import GetAvailableObject
+
+def OpenDetailsInfo(event, arg):
+    detailsInfo = Toplevel()
+    detailsInfo.title("Подробная информация")
+    Label(detailsInfo, text=arg).pack()
+
+def CreateFrameObject(objects):
+    global mainRoot
+    import os
+
+    frameListObject = Frame(mainRoot)
+
+    countRow = math.ceil(len(objects) / 10)
+    countObject = len(objects)
+    index = 0
+    for i in range(countRow):
+        for j in range(10):
+            path = os.path.abspath(f"{objects[index].PhotoPath}")
+            sourcePhoto = Image.open(path)
+
+            photo = sourcePhoto.resize((200, 200))
+
+            photoTK = ImageTk.PhotoImage(photo)
+
+            objFrame = Frame(frameListObject)
+
+            imageObject = Label(objFrame)
+
+            imageObject.pack()
+
+            imageObject.config(image=photoTK)
+
+            Label(objFrame, text=objects[index].Name).pack()
+
+            btn = Button(objFrame, text="Подробнее", fg="white", bg="black")
+
+            btn.bind("<ButtonPress-1>", lambda event, arg=objects[index].Id: OpenDetailsInfo(event, arg))
+
+            btn.pack()
+
+            objFrame.grid(row=i, column=j)
+
+            if index + 1 == countObject:
+                break
+
+            index += 1
+
+    frameListObject.grid(row=1, column=0)
+
+    mainRoot.mainloop()
 
 def ClearRoot():
     if mainRoot.winfo_children():
@@ -14,18 +68,13 @@ def OpenProfileResident():
     frameContent.grid(row=1, column=0)
 
 def OpenMainPage():
-    global frameContent
     ClearRoot()
-    frameContent = GetResidentObject()
-    frameContent.grid(row=1, column=0)
-    mainRoot.update()
+    CreateFrameObject(GetAvailableObject())
+
 
 def OpenAvailableObject():
-    global frameContent
     ClearRoot()
-    frameContent = GetAvailableObject()
-    frameContent.grid(row=1, column=0)
-    mainRoot.update()
+    CreateFrameObject(GetAvailableObject())
 
 
 mainRoot = Tk()

@@ -1,5 +1,10 @@
-from tkinter import Tk, Frame, Button, LEFT, Label
+from tkinter import Toplevel, Frame, Button, Label
 from PIL import Image, ImageTk
+
+def OpenDetailsInfo(event, arg):
+    detailsInfo = Toplevel()
+    detailsInfo.title("Подробная информация")
+    Label(detailsInfo, text=arg).pack()
 
 def GetResidentObject():
     frameContent = Frame()
@@ -12,14 +17,17 @@ def GetResidentObject():
         for j in range(4):
             objFrame = Frame(frameContent)
 
-            imageObject = Label(objFrame, image=photoTK)
-
-            imageObject.pack()
+            Label(objFrame, image=photoTK).pack()
 
             Label(objFrame, text="Объект 1").pack()
 
-            Button(objFrame, text="Подробнее", fg="white", bg="black").pack()
+            btn = Button(objFrame, text="Подробнее", fg="white", bg="black")
+
+            btn.bind('<ButtonPress-1>', lambda event, arg=(i+1)+j: OpenDetailsInfo(event, arg))
+
+            btn.pack()
 
             objFrame.grid(row=i, column=j)
 
     return frameContent
+
