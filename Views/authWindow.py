@@ -7,8 +7,6 @@ def Authorization():
 
 root = Tk()
 
-photoButton = PhotoImage(file=r"./Controllers/image/button.png").subsample(5, 5)
-
 Label(text="Логин").pack()
 
 loginText = Entry()

@@ -1,85 +1,85 @@
 import math
 from tkinter import Tk, Frame, Button, LEFT, Label, Toplevel
 
-from PIL import Image, ImageTk
 
-from Views.profileResident import GetProfileFrame
-from Views.ListResidentObject import GetResidentObject
-from Views.availableObject import GetAvailableObject
+from detailseInfoObject import DetailsInfo
+from Views.profileResident import get_profile_frame
+from Views.ListResidentObject import get_resident_object
+from Views.availableObject import get_available_object
 
-def OpenDetailsInfo(event, arg):
-    detailsInfo = Toplevel()
-    detailsInfo.title("Подробная информация")
-    Label(detailsInfo, text=arg).pack()
-
-def CreateFrameObject(objects):
+def open_details_info(event, arg):
     global mainRoot
-    import os
+    details_info = Toplevel(mainRoot)
+    details_info.title("Подробная информация")
+    DetailsInfo(parent=details_info,object=arg).pack()
 
-    frameListObject = Frame(mainRoot)
+def create_frame_object(objects):
+    global mainRoot
+    frame_list_object = Frame(mainRoot)
 
-    countRow = math.ceil(len(objects) / 10)
-    countObject = len(objects)
+    count_row = math.ceil(len(objects) / 10)
+    count_object = len(objects)
     index = 0
-    for i in range(countRow):
+
+    if count_object == 0:
+        Label(frame_list_object, text="Информация отсутствует").pack()
+        frame_list_object.grid(row=1, column=0)
+        return
+
+    for i in range(count_row):
         for j in range(10):
-            path = os.path.abspath(f"{objects[index].PhotoPath}")
-            sourcePhoto = Image.open(path)
-
-            photo = sourcePhoto.resize((200, 200))
-
-            photoTK = ImageTk.PhotoImage(photo)
-
-            objFrame = Frame(frameListObject)
+            objFrame = Frame(frame_list_object)
 
             imageObject = Label(objFrame)
 
             imageObject.pack()
 
-            imageObject.config(image=photoTK)
+            imageObject.config(image=objects[index].Photo)
 
             Label(objFrame, text=objects[index].Name).pack()
 
             btn = Button(objFrame, text="Подробнее", fg="white", bg="black")
 
-            btn.bind("<ButtonPress-1>", lambda event, arg=objects[index].Id: OpenDetailsInfo(event, arg))
+            btn.bind("<ButtonPress-1>", lambda event, arg=objects[index]: open_details_info(event, arg))
 
             btn.pack()
 
             objFrame.grid(row=i, column=j)
 
-            if index + 1 == countObject:
+            if index + 1 == count_object:
                 break
 
             index += 1
 
-    frameListObject.grid(row=1, column=0)
+    frame_list_object.grid(row=1, column=0)
 
     mainRoot.mainloop()
 
-def ClearRoot():
+def clear_root():
     if mainRoot.winfo_children():
         mainRoot.winfo_children()[1].destroy()
 
-def OpenProfileResident():
+def open_profile_resident():
     global frameContent
-    ClearRoot()
-    frameContent = GetProfileFrame()
+    clear_root()
+    frameContent = get_profile_frame()
     frameContent.grid(row=1, column=0)
 
-def OpenMainPage():
-    ClearRoot()
-    CreateFrameObject(GetAvailableObject())
+def open_main_page():
+    clear_root()
+    create_frame_object(get_resident_object())
 
 
-def OpenAvailableObject():
-    ClearRoot()
-    CreateFrameObject(GetAvailableObject())
+def open_available_object():
+    clear_root()
+    create_frame_object(get_available_object())
 
 
 mainRoot = Tk()
 
 frameMenu = Frame()
+
+mainRoot.title("Плитка резидента")
 
 frameMenu.grid(row=0, column=0)
 
@@ -87,12 +87,12 @@ frameContent = Frame()
 
 frameContent.grid(row=1, column=0)
 
-Button(frameMenu, text="Главная", command=OpenMainPage).pack(side=LEFT)
+Button(frameMenu, text="Главная", command=open_main_page).pack(side=LEFT)
 
-Button(frameMenu, text="Доступные помещения", command=OpenAvailableObject).pack(side=LEFT)
+Button(frameMenu, text="Доступные помещения", command=open_available_object).pack(side=LEFT)
 
-Button(frameMenu, text="Профиль", command=OpenProfileResident).pack(side=LEFT)
+Button(frameMenu, text="Профиль", command=open_profile_resident).pack(side=LEFT)
 
-OpenMainPage()
+open_main_page()
 
 mainRoot.mainloop()

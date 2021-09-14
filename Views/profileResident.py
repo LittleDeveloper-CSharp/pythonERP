@@ -1,6 +1,6 @@
 from tkinter import Frame, Button, Label
 
-def GetProfileFrame():
+def get_profile_frame():
     profile = Frame()
     Label(profile, text="Имя").pack()
     Label(profile, text="Фамилия").pack()
