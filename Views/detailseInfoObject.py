@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from Models.residentModel import RentObject
 
 class DetailsInfo(Frame):
     def open_personal(self):
@@ -9,12 +10,15 @@ class DetailsInfo(Frame):
         return
 
     def request_rent(self):
+        RentObject(self.residentId, self.objectId)
         messagebox.showinfo("Успешно", "Запрос на аренду отправлен")
         self.parent.destroy()
 
-    def __init__(self, parent, object):
+    def __init__(self, parent, object, Id):
         Frame.__init__(self, parent)
         self.parent = parent
+        self.residentId = Id
+        self.objectId = object.Id
         self.widgets(object)
 
     def widgets(self, object):
@@ -27,7 +31,7 @@ class DetailsInfo(Frame):
         self.label_name.pack()
         self.label_area.pack()
 
-        if(object.RoomIsFree):
+        if object.isActive == 1:
             self.bt_rent = Button(self.frame_info, text="Арендовать", command=self.request_rent)
         else:
             self.bt_rent = Button(self.frame_info, text="Персонал", command=self.open_personal)

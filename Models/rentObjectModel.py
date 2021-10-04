@@ -1,14 +1,12 @@
-class ObjectModel:
+class RentObject:
     def __init__(self, object_array):
         self.Id = object_array[0]
         self.Name = object_array[1]
-        self.rentPrice = object_array[2]
-        self.Area = object_array[3]
-        self.isActive = object_array[5]
-        photoPath = object_array[4]
-        if photoPath is None:
-            photoPath = './Controllers/image/none.jpg'
-        self.Photo = self.__get_photo(photoPath)
+        self.Area = object_array[2]
+        self.DateStart = object_array[3]
+        self.DateEnd = object_array[4]
+        self.SumRent = object_array[5]
+        self.Photo = self.__get_photo(object_array[6])
 
     def __get_photo(self, path):
         import os
