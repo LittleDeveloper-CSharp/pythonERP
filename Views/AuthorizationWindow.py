@@ -1,14 +1,14 @@
 from tkinter import *
 from tkinter import messagebox
 
-from Views.mainWindow import Window
-from Models.authModel import AuthorizationUser
+from Views.MainWindow import Window
+from Models.AuthorizationModel import AuthorizationUser
 
 def Authorization():
-    idRole = AuthorizationUser(loginText.get(), passwordText.get())
-    if idRole is not None:
+    role_id, resident_id = AuthorizationUser(loginText.get(), passwordText.get())
+    if role_id is not None:
         root.destroy()
-        Window(idRole[0]).mainloop()
+        Window(role_id, resident_id).mainloop()
     else:
         messagebox.showinfo("Ошибка", "Не правильный логин или пароль")
 

@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
-from Models.residentModel import RentObject
+from Models.ResidentObject import RentObject
 
 class DetailsInfo(Frame):
     def open_personal(self):
@@ -14,10 +14,9 @@ class DetailsInfo(Frame):
         messagebox.showinfo("Успешно", "Запрос на аренду отправлен")
         self.parent.destroy()
 
-    def __init__(self, parent, object, Id):
+    def __init__(self, parent, object):
         Frame.__init__(self, parent)
         self.parent = parent
-        self.residentId = Id
         self.objectId = object.Id
         self.widgets(object)
 
