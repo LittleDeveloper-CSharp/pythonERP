@@ -1,8 +1,10 @@
 from Models.ConnectDataBase import cur
 
-def GetFreeObject():
-    return cur.execute(f"SELECT * FROM freeObject WHERE isActive = '1'").fetchall()
 
-def GetDetailsInfo(id):
-    return cur.execute(f"SELECT * FROM resident WHERE id = '{id}'").fetchone()
+def get_free_object():
+    return cur.execute(f"SELECT * FROM object WHERE isActive = '1'").fetchall()
+
+
+def get_details_info(resident_id):
+    return cur.execute(f"SELECT * FROM resident WHERE id = '{resident_id}'").fetchone()
 

@@ -1,20 +1,20 @@
-from tkinter import Tk, Frame, Button, LEFT, Label, Toplevel
+from tkinter import Tk, Frame
 
-import Views.Partial.Resident.Menu
+import Views.Partial.Resident.ResidentMenu
+
 
 class Window(Tk):
-    def __init__(self, role, id):
+    def __init__(self, user):
         super().__init__()
-
-        self.title("Плитка резидента")
 
         frame_menu = Frame()
 
-        if role == 2:
-            Views.Partial.Resident.Menu.Menu(self, frame_menu, id)
-
+        if user[0][1] == 2:
+            self.title("Плитка резидента")
+            Views.Partial.Resident.ResidentMenu.ResidentMenu(frame_menu, user[1][0])
+        elif user[0][1] == 1:
+            self.title("Плитка управляющего")
+            Views.Partial.Resident.ResidentMenu.ResidentMenu(frame_menu, user[1][0])
+        else:
+            self.title("Плитка бухгалтера")
         frame_menu.grid(row=0, column=0)
-
-        frame_content = Frame()
-
-        frame_content.grid(row=1, column=0)

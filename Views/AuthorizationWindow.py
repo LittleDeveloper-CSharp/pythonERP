@@ -2,29 +2,32 @@ from tkinter import *
 from tkinter import messagebox
 
 from Views.MainWindow import Window
-from Models.AuthorizationModel import AuthorizationUser
-
-def Authorization():
-    role_id, resident_id = AuthorizationUser(loginText.get(), passwordText.get())
-    if role_id is not None:
-        root.destroy()
-        Window(role_id, resident_id).mainloop()
-    else:
-        messagebox.showinfo("Ошибка", "Не правильный логин или пароль")
+from Models.AuthorizationModel import authorization_user
 
 
-root = Tk()
+class AuthWindow(Tk):
+    def __init__(self):
+        super().__init__()
 
-Label(text="Логин").pack()
+        Label(text="Логин").pack()
+        self.loginText = Entry()
+        self.loginText.pack()
 
-loginText = Entry()
-loginText.pack()
+        Label(text="Пароль").pack()
+        self.passwordText = Entry()
+        self.passwordText.pack()
 
-Label(text="Пароль").pack()
+        Button(text="Авторизация", foreground="white", bg="black", borderwidth=0, command=self.authorization).pack()
 
-passwordText = Entry()
-passwordText.pack()
+    def authorization(self):
+        user = authorization_user(self.loginText.get(), self.passwordText.get())
+        if user is not None:
+            root.destroy()
+            Window(user).mainloop()
+        else:
+            messagebox.showinfo("Ошибка", "Неправильный логин или пароль")
 
-Button(text="Авторизация", foreground="white", bg="black", borderwidth=0, command=Authorization).pack()
 
-root.mainloop()
+if __name__ == '__main__':
+    root = AuthWindow()
+    root.mainloop()

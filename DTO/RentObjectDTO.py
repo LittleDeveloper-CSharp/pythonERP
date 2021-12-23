@@ -6,13 +6,16 @@ class RentObject:
         self.DateStart = object_array[3]
         self.DateEnd = object_array[4]
         self.SumRent = object_array[5]
-        self.Photo = self.__get_photo(object_array[6])
+        photo_path = object_array[6]
+        self.Status = object_array[7]
+        if photo_path is None:
+            photo_path = '../Resources/image/none.jpg'
+        self.__set_photo(photo_path)
 
-    def __get_photo(self, path):
+    def __set_photo(self, path):
         import os
         from PIL import Image, ImageTk
         path = os.path.abspath(path)
-        sourcePhoto = Image.open(path)
-        photo = sourcePhoto.resize((200, 200))
-        photoTK = ImageTk.PhotoImage(photo)
-        return photoTK
+        source_photo = Image.open(path)
+        photo = source_photo.resize((200, 200))
+        self.Photo = ImageTk.PhotoImage(photo)
