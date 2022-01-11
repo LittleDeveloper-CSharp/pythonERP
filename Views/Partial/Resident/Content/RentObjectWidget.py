@@ -2,7 +2,7 @@ from Models.ResidentObject import get_rent_object, cancellation_rent
 from tkinter import Frame, Label, Button, Toplevel, messagebox
 import math
 
-from DTO.RentObjectDTO import RentObject
+from DTO.rentObjectDTO import RentObject
 from Views.ObjectDetailsInfo import DetailsInfo
 
 
@@ -30,8 +30,8 @@ class RentObjectWidget(Frame):
                 image_object = Label(obj_frame)
 
                 image_object.pack()
-                image_object.config(image=rent_object.Photo)
-
+                image_object.configure(image=rent_object.Photo)
+                image_object.image = rent_object.Photo
                 if rent_object.Status == 1:
                     Label(obj_frame, text=rent_object.Name).pack()
                     btn = Button(obj_frame, text="Подробнее", fg="white", bg="black")

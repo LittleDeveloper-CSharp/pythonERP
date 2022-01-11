@@ -17,4 +17,4 @@ class Window(Tk):
             Views.Partial.Resident.ResidentMenu.ResidentMenu(frame_menu, user[1][0])
         else:
             self.title("Плитка бухгалтера")
-        frame_menu.grid(row=0, column=0)
+        frame_menu.grid(row=0, column=0, padx=20)

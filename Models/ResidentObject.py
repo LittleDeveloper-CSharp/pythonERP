@@ -34,3 +34,40 @@ def cancellation_rent(resident_id, object_id):
     cur.execute(f"UPDATE rent SET idStatus = '3' WHERE idResident = '{resident_id}' and idObject = '{object_id}'"
                 f" and idStatus = '2'")
     conn.commit()
+
+
+def edit_profile(resident_info, password):
+    cur.execute(f"UPDATE resident SET lastName = '{resident_info.last_name}',"
+                f"firstName = '{resident_info.first_name}', patronymic = '{resident_info.patronymic}',"
+                f"inn = '{resident_info.inn}', phone = '{resident_info.phone}',"
+                f"email = '{resident_info.email}', photoPath = '{resident_info.photo_path}' "
+                f"WHERE id = '{resident_info.id}'")
+
+    if password != '' and not password.isspace():
+        cur.execute(f"UPDATE user SET password = '{password}' WHERE login = '{resident_info.login}'")
+
+    conn.commit()
+
+
+def docs_by_user(login):
+    return cur.execute(f"SELECT * FROM document WHERE loginUser = '{login}' and isActual = '1'").fetchall()
+
+
+def create_doc_for_user(doc):
+    cur.execute(f"INSERT INTO document (name, description, loginUser, path) "
+                f"VALUES ('{doc.name}', '{doc.description}', '{doc.user_login}', '{doc.path}')")
+    conn.commit()
+
+
+def delete_doc(doc_id):
+    cur.execute(f"UPDATE document SET isActual = '0' WHERE id = '{doc_id}'")
+    conn.commit()
+
+
+def update_doc(doc):
+    cur.execute(f"UPDATE document SET isActual = '0' WHERE id = '{doc.id}'")
+    create_doc_for_user(doc)
+
+
+def doc_by_id(doc_id):
+    return cur.execute(f"SELECT * FROM document WHERE id = '{doc_id}'").fetchone()

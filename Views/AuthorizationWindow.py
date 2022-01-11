@@ -9,15 +9,22 @@ class AuthWindow(Tk):
     def __init__(self):
         super().__init__()
 
-        Label(text="Логин").pack()
-        self.loginText = Entry()
+        self.title("Авторизация")
+
+        main_frame = Frame(self)
+
+        Label(main_frame, text="Логин").pack()
+        self.loginText = Entry(main_frame)
         self.loginText.pack()
 
-        Label(text="Пароль").pack()
-        self.passwordText = Entry()
+        Label(main_frame, text="Пароль").pack()
+        self.passwordText = Entry(main_frame)
         self.passwordText.pack()
 
-        Button(text="Авторизация", foreground="white", bg="black", borderwidth=0, command=self.authorization).pack()
+        Button(main_frame, text="Вход", foreground="white", bg="black", borderwidth=0,
+               command=self.authorization).pack(pady=5)
+
+        main_frame.pack(pady=10, padx=60)
 
     def authorization(self):
         user = authorization_user(self.loginText.get(), self.passwordText.get())
