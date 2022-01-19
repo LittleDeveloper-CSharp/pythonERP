@@ -7,8 +7,8 @@ from Views.ObjectDetailsInfo import DetailsInfo
 
 
 class RentObjectWidget(Frame):
-    def __init__(self, resident_id):
-        super().__init__()
+    def __init__(self, master, resident_id):
+        super().__init__(master)
         resident_objects = get_rent_object(resident_id)
 
         self.resident_id = resident_id

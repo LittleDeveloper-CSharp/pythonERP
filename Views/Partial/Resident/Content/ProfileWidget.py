@@ -6,8 +6,8 @@ from Views.Partial.Resident.Content.EditProfileResidentFrame import EditProfileR
 
 
 class Profile(Frame):
-    def __init__(self, resident_id):
-        super().__init__()
+    def __init__(self, master, resident_id):
+        super().__init__(master)
         resident = Resident(get_details_info(resident_id))
         photo_path = resident.photo_path
         if photo_path is None:

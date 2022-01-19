@@ -65,7 +65,7 @@ def delete_doc(doc_id):
 
 
 def update_doc(doc):
-    cur.execute(f"UPDATE document SET isActual = '0' WHERE id = '{doc.id}'")
+    delete_doc(doc.id)
     create_doc_for_user(doc)
 
 

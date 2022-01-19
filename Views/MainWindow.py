@@ -7,14 +7,15 @@ class Window(Tk):
     def __init__(self, user):
         super().__init__()
 
-        frame_menu = Frame()
+        main_frame = Frame(self)
 
         if user[0][1] == 2:
             self.title("Плитка резидента")
-            Views.Partial.Resident.ResidentMenu.ResidentMenu(frame_menu, user[1][0])
+            Views.Partial.Resident.ResidentMenu.ResidentMenu(main_frame, user[1][0])
         elif user[0][1] == 1:
             self.title("Плитка управляющего")
-            Views.Partial.Resident.ResidentMenu.ResidentMenu(frame_menu, user[1][0])
+            Views.Partial.Resident.ResidentMenu.ResidentMenu(main_frame, user[1][0])
         else:
             self.title("Плитка бухгалтера")
-        frame_menu.grid(row=0, column=0, padx=20)
+
+        main_frame.grid(padx=20)

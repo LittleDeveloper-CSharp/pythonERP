@@ -1,4 +1,4 @@
-from DTO.ObjectDTO import ObjectModel
+from DTO.objectDTO import ObjectModel
 from Models.ObjectModel import get_free_object
 
 def get_available_object():

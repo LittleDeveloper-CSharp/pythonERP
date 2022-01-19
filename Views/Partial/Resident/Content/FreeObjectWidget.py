@@ -1,14 +1,14 @@
 from tkinter import Frame, Label, Button, Toplevel
 import math
 
-from DTO.ObjectDTO import ObjectModel
+from DTO.objectDTO import ObjectModel
 from Views.ObjectDetailsInfo import DetailsInfo
 from Models.ObjectModel import get_free_object
 
 
 class FreeObject(Frame):
-    def __init__(self, resident_id):
-        super().__init__()
+    def __init__(self, master, resident_id):
+        super().__init__(master)
 
         objects_tuple = get_free_object()
 
