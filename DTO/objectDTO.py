@@ -4,7 +4,7 @@ class ObjectModel:
         self.Name = object_array[1]
         self.rentPrice = object_array[2]
         self.Area = object_array[3]
-        self.isActive = object_array[5]
+        self.idStatus = object_array[5]
         photo_path = object_array[4]
         if photo_path is None:
             photo_path = '../Resources/image/none.jpg'

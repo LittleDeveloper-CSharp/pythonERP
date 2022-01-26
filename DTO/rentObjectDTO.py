@@ -7,7 +7,7 @@ class RentObject:
         self.DateEnd = object_array[4]
         self.SumRent = object_array[5]
         photo_path = object_array[6]
-        self.Status = object_array[7]
+        self.idStatus = object_array[7]
         if photo_path is None:
             photo_path = '../Resources/image/none.jpg'
         self.__set_photo(photo_path)

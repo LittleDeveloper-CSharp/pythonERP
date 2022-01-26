@@ -7,10 +7,12 @@ from Models.ObjectModel import get_free_object
 
 
 class FreeObject(Frame):
-    def __init__(self, master, resident_id):
+    def __init__(self, master, resident_id, refresh_frame):
         super().__init__(master)
 
         objects_tuple = get_free_object()
+
+        self.delegate_refresh_frame = refresh_frame
 
         objects = [ObjectModel(i) for i in objects_tuple]
 
@@ -47,4 +49,5 @@ class FreeObject(Frame):
     def open_details_info(self, arg, resident_id):
         details_info = Toplevel(self)
         details_info.title("Подробная информация")
-        DetailsInfo(parent=details_info, object_dto=arg, resident_id=resident_id).pack()
+        DetailsInfo(parent=details_info, object_dto=arg, resident_id=resident_id,
+                    refresh_frame=self.delegate_refresh_frame).pack()

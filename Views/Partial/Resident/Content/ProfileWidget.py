@@ -6,8 +6,9 @@ from Views.Partial.Resident.Content.EditProfileResidentFrame import EditProfileR
 
 
 class Profile(Frame):
-    def __init__(self, master, resident_id):
+    def __init__(self, master, resident_id, refresh_frame):
         super().__init__(master)
+        self.delegate_refresh_frame = refresh_frame
         resident = Resident(get_details_info(resident_id))
         photo_path = resident.photo_path
         if photo_path is None:
@@ -39,5 +40,5 @@ class Profile(Frame):
 
     def __edit_profile_click(self, resident):
         edit_modal = Toplevel(self)
-        EditProfileResidentFrame(edit_modal, resident).pack()
+        EditProfileResidentFrame(edit_modal, resident, self.delegate_refresh_frame).pack()
         edit_modal.title("Редактирование")

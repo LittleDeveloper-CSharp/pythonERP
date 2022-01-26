@@ -33,16 +33,16 @@ class ResidentMenu:
 
     def profile_resident(self):
         self.destroy_widget()
-        Profile(self.content, self.resident.id).grid(row=1, column=0)
+        Profile(self.content, self.resident.id, self.profile_resident).grid(row=1, column=0)
 
     def free_object(self):
         self.destroy_widget()
-        FreeObject(self.content, self.resident.id).grid(row=1, column=0)
+        FreeObject(self.content, self.resident.id, self.free_object).grid(row=1, column=0)
         self.create_pagination_width()
 
     def resident_objects(self):
         self.destroy_widget()
-        RentObjectWidget(self.content, self.resident.id).grid(row=1, column=0)
+        RentObjectWidget(self.content, self.resident.id, self.resident_objects).grid(row=1, column=0)
         self.create_pagination_width()
 
     def docs_frame(self):
@@ -50,13 +50,14 @@ class ResidentMenu:
         DocsFrame(self.content, self.resident.login).grid(row=1, column=0)
 
     def create_pagination_width(self):
-        frame_size_panel = Frame(self.content)
-        Button(frame_size_panel, text="5").pack(side=LEFT)
-        Button(frame_size_panel, text="10").pack(side=LEFT)
-        Button(frame_size_panel, text="15").pack(side=LEFT)
-        frame_size_panel.grid(row=0, column=0)
+        if len(self.content.children) > 5:
+            frame_size_panel = Frame(self.content)
+            Button(frame_size_panel, text="5").pack(side=LEFT)
+            Button(frame_size_panel, text="10").pack(side=LEFT)
+            Button(frame_size_panel, text="15").pack(side=LEFT)
+            frame_size_panel.grid(row=0, column=0)
 
-        frame_pagination = Frame(self.content)
-        Button(frame_pagination, text="<<").pack(side=LEFT)
-        Button(frame_pagination, text=">>").pack(side=RIGHT)
-        frame_pagination.grid(row=2, column=0)
+            frame_pagination = Frame(self.content)
+            Button(frame_pagination, text="<<").pack(side=LEFT)
+            Button(frame_pagination, text=">>").pack(side=RIGHT)
+            frame_pagination.grid(row=2, column=0)

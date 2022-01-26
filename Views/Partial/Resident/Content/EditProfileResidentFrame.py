@@ -4,10 +4,12 @@ from shutil import copyfile
 
 
 class EditProfileResidentFrame(Frame):
-    def __init__(self, parent, resident):
+    def __init__(self, parent, resident, refresh_frame):
         Frame.__init__(self, parent)
         self.resident = resident
         self.parent = parent
+
+        self.delegate_refresh_frame = refresh_frame
 
         frame_info = Frame(self)
 
@@ -95,6 +97,7 @@ class EditProfileResidentFrame(Frame):
         self.resident.first_name = self.entry_first_name.get()
 
         edit_profile(self.resident, self.entry_password.get())
+        self.delegate_refresh_frame()
         self.parent.destroy()
 
     def __ask_open_photo(self):

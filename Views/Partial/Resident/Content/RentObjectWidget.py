@@ -7,10 +7,10 @@ from Views.ObjectDetailsInfo import DetailsInfo
 
 
 class RentObjectWidget(Frame):
-    def __init__(self, master, resident_id):
+    def __init__(self, master, resident_id, refresh_frame):
         super().__init__(master)
         resident_objects = get_rent_object(resident_id)
-
+        self.delegate_refresh_frame = refresh_frame
         self.resident_id = resident_id
 
         objects = [RentObject(i) for i in resident_objects]
@@ -32,7 +32,7 @@ class RentObjectWidget(Frame):
                 image_object.pack()
                 image_object.configure(image=rent_object.Photo)
                 image_object.image = rent_object.Photo
-                if rent_object.Status == 1:
+                if rent_object.idStatus == 1:
                     Label(obj_frame, text=rent_object.Name).pack()
                     btn = Button(obj_frame, text="Подробнее", fg="white", bg="black")
                     btn.bind("<ButtonPress-1>", lambda event, arg=rent_object: self.open_details_info(arg))
@@ -56,9 +56,11 @@ class RentObjectWidget(Frame):
     def open_details_info(self, arg):
         details_info = Toplevel(self)
         details_info.title("Подробная информация")
-        DetailsInfo(parent=details_info, object_dto=arg, resident_id=self.resident_id).pack()
+        DetailsInfo(parent=details_info, object_dto=arg, resident_id=self.resident_id,
+                    refresh_frame=self.delegate_refresh_frame).pack()
 
     def cancellation_rent(self, object_id):
         if messagebox.askokcancel("Подтверждение", "Вы уверены?"):
             cancellation_rent(self.resident_id, object_id)
+            self.delegate_refresh_frame()
 

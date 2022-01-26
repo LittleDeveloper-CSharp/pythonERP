@@ -7,11 +7,11 @@ def get_rent_object(resident_id):
     return cur.execute("SELECT o.id, o.name, o.area, r.dateStart, r.dateEnd, r.totalSum, o.photoPath, r.idStatus"
                        " FROM rent as r"
                        " LEFT JOIN object as o ON o.id = r.idObject"
-                       f" WHERE idResident = {resident_id} and idStatus != 3").fetchall()
+                       f" WHERE idResident = {resident_id} and o.idStatus != 3 and r.idStatus != 3").fetchall()
 
 
 def resident_objects(resident_id, object_id, date_start_srt, date_end_srt):
-    cur.execute(f"UPDATE object SET isActive = '0' WHERE id = '{object_id}'")
+    cur.execute(f"UPDATE object SET idStatus = '2' WHERE id = '{object_id}'")
 
     rent_day = cur.execute(f"SELECT price FROM object WHERE id = '{object_id}'").fetchone()[0]
 
@@ -30,7 +30,7 @@ def resident_objects(resident_id, object_id, date_start_srt, date_end_srt):
 
 
 def cancellation_rent(resident_id, object_id):
-    cur.execute(f"UPDATE object SET isActive = '1' WHERE id = '{object_id}'")
+    cur.execute(f"UPDATE object SET idStatus = '4' WHERE id = '{object_id}'")
     cur.execute(f"UPDATE rent SET idStatus = '3' WHERE idResident = '{resident_id}' and idObject = '{object_id}'"
                 f" and idStatus = '2'")
     conn.commit()

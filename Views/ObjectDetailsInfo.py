@@ -6,11 +6,12 @@ from tkcalendar import Calendar
 
 
 class DetailsInfo(Frame):
-    def __init__(self, parent, object_dto, resident_id):
+    def __init__(self, parent, object_dto, resident_id, refresh_frame):
         Frame.__init__(self, parent)
         self.parent = parent
+        self.delegate_refresh_frame = refresh_frame
         self.frame_info = Frame(self)
-        if object_dto.isActive == 1:
+        if object_dto.idStatus == 4:
             self.frame_first_step_rent = Frame(self)
             self.frame_second_step_rent = Frame(self)
             self.resident_id = resident_id
@@ -20,24 +21,27 @@ class DetailsInfo(Frame):
             Label(self.frame_first_step_rent, text="Начало аренды").pack()
             self.calStart = Calendar(master=self.frame_first_step_rent, year=date.year, month=date.month, day=date.day,
                                      mindate=date, locale="ru_RU")
+            self.calStart.pack()
+            Button(self.frame_first_step_rent, text="Подтвердить", command=self.select_end_date).pack()
             Label(self.frame_second_step_rent, text="Конец аренды").pack()
             self.calEnd = Calendar(master=self.frame_second_step_rent, locale="ru_RU")
             self.calEnd.pack()
             Button(self.frame_second_step_rent, text="Подтвердить", command=self.request_rent).pack()
-            self.calStart.pack()
         else:
             self.btn = Button(self.frame_info, text="Персонал", command=self.open_personal)
             self.frame_info_personal = Frame(self)
 
         self.frame_description_info = Frame(self)
 
-        self.objectId = object_dto.Id
+        self.object = object_dto
 
-        self.widgets(object_dto)
+        self.widgets()
+
+        self.btn.pack()
 
     def select_start_date(self):
-        self.btn.pack_forget()
         self.frame_first_step_rent.grid(row=0, column=2)
+        self.btn.pack_forget()
 
     def select_end_date(self):
         self.frame_first_step_rent.destroy()
@@ -46,17 +50,22 @@ class DetailsInfo(Frame):
         self.calEnd.config(mindate=date)
         self.frame_second_step_rent.grid(row=0, column=2)
 
-    def widgets(self, free_object):
-        Label(self.frame_info, image=free_object.Photo).pack()
-        Label(self.frame_info, text=free_object.Name).pack()
+    def widgets(self):
+        Label(self.frame_info, image=self.object.Photo).pack()
+        Label(self.frame_info, text=self.object.Name).pack()
 
-        Label(self.frame_description_info, text="Основная информация").pack()
-        Label(self.frame_description_info, text=free_object.rentPrice).pack()
-        Label(self.frame_description_info, text=free_object.Area).pack()
-        Label(self.frame_description_info, text=free_object.isActive).pack()
+        if self.object.idStatus == 4:
+            Label(self.frame_description_info, text="Основная информация").pack()
+            Label(self.frame_description_info, text=self.object.rentPrice).pack()
+            Label(self.frame_description_info, text=self.object.Area).pack()
+            Label(self.frame_description_info, text=self.object.idStatus).pack()
 
-        if free_object.isActive == 1:
-            Button(self.frame_first_step_rent, text="Выбрать", command=self.select_end_date).pack()
+        else:
+            Label(self.frame_description_info, text="Основная информация").pack()
+            Label(self.frame_description_info, text=f"{self.object.DateStart} - {self.object.DateEnd}").pack()
+            Label(self.frame_description_info, text=self.object.Area).pack()
+            Label(self.frame_description_info, text=self.object.SumRent).pack()
+
         self.btn.pack()
 
         self.frame_info.grid(row=0, column=0)
@@ -64,10 +73,11 @@ class DetailsInfo(Frame):
 
     def open_personal(self):
         Label(self.frame_info_personal, text="Тут должен быть персонал, но мне лень").pack()
-        self.frame_info_personal.grid(row=0, column=1)
+        self.frame_info_personal.grid(row=0, column=2)
         return
 
     def request_rent(self):
-        resident_objects(self.resident_id, self.objectId, self.calStart.get_date(), self.calEnd.get_date())
+        resident_objects(self.resident_id, self.object.Id, self.calStart.get_date(), self.calEnd.get_date())
         messagebox.showinfo("Успешно", "Запрос на аренду отправлен")
+        self.delegate_refresh_frame()
         self.parent.destroy()
