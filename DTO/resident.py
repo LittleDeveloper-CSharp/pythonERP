@@ -1,6 +1,6 @@
 class Resident:
     def __init__(self, resident_info_tuple):
-        self.id = resident_info_tuple[0]
+        self.Id = resident_info_tuple[0]
         self.login = resident_info_tuple[1]
         self.last_name = resident_info_tuple[2]
         self.first_name = resident_info_tuple[3]

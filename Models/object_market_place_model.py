@@ -1,4 +1,8 @@
-from Models.ConnectDataBase import cur
+from Models.connect_data_base import cur
+
+
+def get_objects():
+    return cur.execute(f"SELECT * FROM object").fetchall()
 
 
 def get_free_object():

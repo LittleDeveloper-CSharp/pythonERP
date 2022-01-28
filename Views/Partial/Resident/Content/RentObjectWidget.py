@@ -1,8 +1,8 @@
-from Models.ResidentObject import get_rent_object, cancellation_rent
+from Models.resident_object import get_rent_object, cancellation_rent
 from tkinter import Frame, Label, Button, Toplevel, messagebox
 import math
 
-from DTO.rentObjectDTO import RentObject
+from DTO.rent_object import RentObject
 from Views.ObjectDetailsInfo import DetailsInfo
 
 

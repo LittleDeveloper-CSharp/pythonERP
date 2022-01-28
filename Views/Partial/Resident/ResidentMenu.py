@@ -1,16 +1,20 @@
 from tkinter import Frame, Button, LEFT, RIGHT
 
-from DTO.resident import Resident
-from Models.ObjectModel import get_details_info
+from Models.object_market_place_model import get_free_object
+from Service.Helper.ObjectItem import ObjectPartial
+from Service.Helper.PaginataionList import PaginationList
+from Service.Helper.ResidentItem import ResidentPartial
+from Service.Helper.ResidentObjectItem import ResidentObjectPartial
+from Service.ORM.AvailableObject import get_available_object
+from Service.ORM.ResidentObject import get_resident_object
 from Views.Partial.Resident.Content.DocsFrame import DocsFrame
 from Views.Partial.Resident.Content.ProfileWidget import Profile
-from Views.Partial.Resident.Content.FreeObjectWidget import FreeObject
-from Views.Partial.Resident.Content.RentObjectWidget import RentObjectWidget
+from Models.resident_object import get_rent_object
 
 
 class ResidentMenu:
-    def __init__(self, main_frame, resident_id):
-        self.resident = Resident(get_details_info(resident_id))
+    def __init__(self, main_frame, user):
+        self.resident = user.resident
         self.content = Frame(main_frame)
         frame_menu = Frame(main_frame)
 
@@ -33,16 +37,18 @@ class ResidentMenu:
 
     def profile_resident(self):
         self.destroy_widget()
-        Profile(self.content, self.resident.id, self.profile_resident).grid(row=1, column=0)
+        Profile(self.content, self.resident.Id, self.profile_resident).grid(row=1, column=0)
 
     def free_object(self):
         self.destroy_widget()
-        FreeObject(self.content, self.resident.id, self.free_object).grid(row=1, column=0)
+        free_object = [ObjectPartial(i) for i in get_available_object()]
+        PaginationList(self.content, free_object).grid(row=1, column=0)
         self.create_pagination_width()
 
     def resident_objects(self):
         self.destroy_widget()
-        RentObjectWidget(self.content, self.resident.id, self.resident_objects).grid(row=1, column=0)
+        rent_object = [ResidentObjectPartial(i) for i in get_resident_object(self.resident.Id)]
+        PaginationList(self.content, rent_object).grid(row=1, column=0)
         self.create_pagination_width()
 
     def docs_frame(self):

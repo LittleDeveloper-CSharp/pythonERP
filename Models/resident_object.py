@@ -1,6 +1,6 @@
 import datetime
 
-from Models.ConnectDataBase import cur, conn
+from Models.connect_data_base import cur, conn
 
 
 def get_rent_object(resident_id):
@@ -37,11 +37,14 @@ def cancellation_rent(resident_id, object_id):
 
 
 def edit_profile(resident_info, password):
-    cur.execute(f"UPDATE resident SET lastName = '{resident_info.last_name}',"
-                f"firstName = '{resident_info.first_name}', patronymic = '{resident_info.patronymic}',"
-                f"inn = '{resident_info.inn}', phone = '{resident_info.phone}',"
-                f"email = '{resident_info.email}', photoPath = '{resident_info.photo_path}' "
-                f"WHERE id = '{resident_info.id}'")
+    flag = cur.execute('SELECT id FROM resident_wait_update WHERE login = ?', (resident_info.login,)).fetchone()
+    if flag is None:
+        cur.execute("INSERT INTO resident_wait_update (login, lastName, "
+                    "firstName, patronymic, inn, phone, email, photoPath) "
+                    f"VALUES ('{resident_info.login}', '{resident_info.last_name}', '{resident_info.first_name}', "
+                    f"'{resident_info.patronymic}',"
+                    f"'{resident_info.inn}', '{resident_info.phone}', '{resident_info.email}', "
+                    f"'{resident_info.photo_path}')")
 
     if password != '' and not password.isspace():
         cur.execute(f"UPDATE user SET password = '{password}' WHERE login = '{resident_info.login}'")
@@ -65,7 +68,7 @@ def delete_doc(doc_id):
 
 
 def update_doc(doc):
-    delete_doc(doc.id)
+    delete_doc(doc.Id)
     create_doc_for_user(doc)
 
 

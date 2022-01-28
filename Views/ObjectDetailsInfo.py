@@ -1,7 +1,7 @@
 import datetime
 from tkinter import *
 from tkinter import messagebox
-from Models.ResidentObject import resident_objects
+from Models.resident_object import resident_objects
 from tkcalendar import Calendar
 
 

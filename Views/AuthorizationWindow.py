@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 
 from Views.MainWindow import Window
-from Models.AuthorizationModel import authorization_user
+from Models.authorization_model import authorization_user
 
 
 class AuthWindow(Tk):

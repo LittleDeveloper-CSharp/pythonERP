@@ -1,6 +1,7 @@
 from tkinter import Tk, Frame
 
-import Views.Partial.Resident.ResidentMenu
+from Views.Partial.Resident.ResidentMenu import ResidentMenu
+from Views.Partial.Admin.AdminMenu import AdminMenu
 
 
 class Window(Tk):
@@ -9,12 +10,12 @@ class Window(Tk):
 
         main_frame = Frame(self)
 
-        if user[0][1] == 2:
+        if user.idRole == 2:
             self.title("Плитка резидента")
-            Views.Partial.Resident.ResidentMenu.ResidentMenu(main_frame, user[1][0])
-        elif user[0][1] == 1:
+            ResidentMenu(main_frame, user)
+        elif user.idRole == 1:
             self.title("Плитка управляющего")
-            Views.Partial.Resident.ResidentMenu.ResidentMenu(main_frame, user[1][0])
+            AdminMenu(main_frame)
         else:
             self.title("Плитка бухгалтера")
 

@@ -4,7 +4,7 @@ from tkinter import Frame, Listbox, Button, LEFT, RIGHT, Entry, Label, END, file
 from shutil import copyfile
 
 from DTO.doc import Doc
-from Models.ResidentObject import docs_by_user, create_doc_for_user, doc_by_id, update_doc, delete_doc
+from Models.resident_object import docs_by_user, create_doc_for_user, doc_by_id, update_doc, delete_doc
 
 
 def change_state_container(container, state):
@@ -79,7 +79,7 @@ class DocsFrame(Frame):
     def __delete_doc(self):
         if not self.is_create_doc and self.select_doc is not None:
             if messagebox.askquestion("Подтверждение", "Подтвердите удаление") == 'yes':
-                delete_doc(self.select_doc.id)
+                delete_doc(self.select_doc.Id)
                 self.__cancellation_create_doc()
 
     def __accept_create_doc(self):

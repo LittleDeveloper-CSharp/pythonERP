@@ -1,7 +1,7 @@
 from tkinter import Label, Button, Frame, Toplevel
 
 from DTO.resident import Resident
-from Models.ObjectModel import get_details_info
+from Models.object_market_place_model import get_details_info
 from Views.Partial.Resident.Content.EditProfileResidentFrame import EditProfileResidentFrame
 
 

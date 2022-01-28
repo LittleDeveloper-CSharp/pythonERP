@@ -1,5 +1,5 @@
 from tkinter import Frame, Entry, Label, Button, filedialog
-from Models.ResidentObject import edit_profile
+from Models.resident_object import edit_profile
 from shutil import copyfile
 
 
@@ -12,12 +12,6 @@ class EditProfileResidentFrame(Frame):
         self.delegate_refresh_frame = refresh_frame
 
         frame_info = Frame(self)
-
-        # frame_login = Frame(frame_info)
-        # Label(frame_login, text="Логин").grid(row=0, column=0)
-        # self.entry_login = Entry(frame_login)
-        # self.entry_login.grid(row=0, column=1)
-        # frame_login.pack()
 
         frame_last_name = Frame(frame_info)
         Label(frame_last_name, text="Отчество").grid(row=0, column=0)
@@ -82,7 +76,6 @@ class EditProfileResidentFrame(Frame):
         self.entry_phone.insert(0, self.resident.phone)
         self.entry_email.insert(0, self.resident.email)
         self.entry_inn.insert(0, self.resident.inn)
-        # self.entry_login.insert(0, self.resident.login)
         self.entry_patronymic.insert(0, self.resident.patronymic)
         self.entry_last_name.insert(0, self.resident.last_name)
         self.entry_first_name.insert(0, self.resident.first_name)
@@ -91,7 +84,6 @@ class EditProfileResidentFrame(Frame):
         self.resident.phone = self.entry_phone.get()
         self.resident.email = self.entry_email.get()
         self.resident.inn = self.entry_inn.get()
-        # self.resident.login = self.entry_login.get()
         self.resident.patronymic = self.entry_patronymic.get()
         self.resident.last_name = self.entry_last_name.get()
         self.resident.first_name = self.entry_first_name.get()
