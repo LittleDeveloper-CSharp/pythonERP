@@ -1,7 +1,7 @@
-from tkinter import Tk, Frame
+from tkinter import Frame, Tk
 
-from Views.Partial.Resident.ResidentMenu import ResidentMenu
-from Views.Partial.Admin.AdminMenu import AdminMenu
+from Views.Partial.Resident.resident_menu import ResidentMenu
+from Views.Partial.Admin.admin_menu import AdminMenu
 
 
 class Window(Tk):

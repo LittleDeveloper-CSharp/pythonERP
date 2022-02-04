@@ -1,4 +1,4 @@
-from Service.Helper.OpenerPhoto import set_photo
+from Service.opener_photo import set_photo
 
 
 class RequestRentObject:

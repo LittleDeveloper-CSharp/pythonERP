@@ -17,16 +17,10 @@ def get_resident_for_update(request_id):
     return resident, resident_for_update
 
 
-def get_wait_rent(rent_id):
-    return cur.execute("SELECT r.id, price, area, dateStart, dateEnd, totalSum, photoPath FROM rent as r "
-                       "INNER JOIN object as o ON o.id = r.idObject "
-                       "WHERE r.id = ?", (rent_id,)).fetchone()
-
-
 def get_wait_update_list():
     return cur.execute("SELECT resident_wait_update.id, resident.lastName || ' ' || resident.firstName "
                        "FROM resident_wait_update "
-                       "INNER JOIN resident ON resident.login = resident_wait_update.login")
+                       "LEFT JOIN resident ON resident.login = resident_wait_update.login")
 
 
 def create_resident(resident):
@@ -36,14 +30,31 @@ def create_resident(resident):
     conn.commit()
 
 
+def get_request_by_rent(rent_id):
+    return cur.execute("SELECT r.id, r.idResident, r.idObject, r.dateStart, r.dateEnd, r.totalSum, r.idStatus, "
+                       "o.area, o.photoPath FROM rent as r "
+                       "INNER JOIN object as o ON o.id = r.idObject WHERE r.id = ?", (rent_id,)).fetchone()
+
+
+def get_resident(resident_id):
+    return cur.execute("SELECT * FROM resident WHERE id = ?", (resident_id,)).fetchone()
+
+
 def update_property_rent(rent_id, status):
+    object_id = cur.execute(f"SELECT idObject FROM rent  WHERE id = {rent_id}").fetchone()[0]
     cur.execute(f"UPDATE rent SET idStatus = {status} WHERE id = '{rent_id}'")
+
+    if status == 3:
+        cur.execute(f"UPDATE object SET idStatus = '4' WHERE id = '{object_id}'")
+    else:
+        cur.execute(f"UPDATE object SET idStatus = '1' WHERE id = '{object_id}'")
     conn.commit()
 
 
 def accept_update_resident(resident, status):
     if status == 1:
-        cur.execute(f"DELETE FROM resident WHERE login = {resident.login}")
-        cur.execute(f"INSERT INTO resident SELECT * FROM resident_wait_update WHERE id = {resident.Id}")
-    cur.execute(f"DELETE FROM resident_wait_update WHERE id = {resident.id}")
+        cur.execute(f"DELETE FROM resident WHERE login = '{resident.login}'")
+        cur.execute(f"INSERT INTO resident SELECT * FROM resident_wait_update WHERE id = '{resident.Id}'")
+        cur.execute(f"UPDATE user SET isActive = 1 WHERE login = '{resident.login}'")
+    cur.execute(f"DELETE FROM resident_wait_update WHERE id = '{resident.Id}'")
     conn.commit()

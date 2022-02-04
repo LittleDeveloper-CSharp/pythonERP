@@ -4,9 +4,11 @@ from tkinter import messagebox
 from Models.resident_object import resident_objects
 from tkcalendar import Calendar
 
+from Service.opener_photo import set_photo
+
 
 class DetailsInfo(Frame):
-    def __init__(self, parent, object_dto, resident_id, refresh_frame):
+    def __init__(self, parent, object_dto, resident, refresh_frame):
         Frame.__init__(self, parent)
         self.parent = parent
         self.delegate_refresh_frame = refresh_frame
@@ -14,7 +16,7 @@ class DetailsInfo(Frame):
         if object_dto.idStatus == 4:
             self.frame_first_step_rent = Frame(self)
             self.frame_second_step_rent = Frame(self)
-            self.resident_id = resident_id
+            self.resident = resident
             self.btn = Button(self.frame_info, text="Арендовать", command=self.select_start_date)
 
             date = datetime.date.today()
@@ -51,20 +53,23 @@ class DetailsInfo(Frame):
         self.frame_second_step_rent.grid(row=0, column=2)
 
     def widgets(self):
-        Label(self.frame_info, image=self.object.Photo).pack()
+        photo = set_photo(self.object.photo_path)
+        Label(self.frame_info, image=photo).pack()
         Label(self.frame_info, text=self.object.Name).pack()
 
         if self.object.idStatus == 4:
-            Label(self.frame_description_info, text="Основная информация").pack()
-            Label(self.frame_description_info, text=self.object.rentPrice).pack()
-            Label(self.frame_description_info, text=self.object.Area).pack()
-            Label(self.frame_description_info, text=self.object.idStatus).pack()
+            Label(self.frame_description_info, justify=LEFT, text="Основная информация").pack()
+            Label(self.frame_description_info, justify=LEFT, text=f"Минимальная стоимость аренды - "
+                                                                  f"{self.object.rentPrice}").pack()
+            Label(self.frame_description_info, justify=LEFT, text=f"Площадь - {self.object.Area}").pack()
+            Label(self.frame_description_info, justify=LEFT, text="Свободно").pack()
 
         else:
-            Label(self.frame_description_info, text="Основная информация").pack()
-            Label(self.frame_description_info, text=f"{self.object.DateStart} - {self.object.DateEnd}").pack()
-            Label(self.frame_description_info, text=self.object.Area).pack()
-            Label(self.frame_description_info, text=self.object.SumRent).pack()
+            Label(self.frame_description_info, justify=LEFT, text="Основная информация").pack()
+            Label(self.frame_description_info, justify=LEFT, text=f"Даты аренды: с {self.object.DateStart} -  до "
+                                                                  f"{self.object.DateEnd}").pack()
+            Label(self.frame_description_info, justify=LEFT, text=f"Площадь - {self.object.Area}").pack()
+            Label(self.frame_description_info, justify=LEFT, text=f"Сумма аренды - {self.object.SumRent}").pack()
 
         self.btn.pack()
 
@@ -77,7 +82,7 @@ class DetailsInfo(Frame):
         return
 
     def request_rent(self):
-        resident_objects(self.resident_id, self.object.Id, self.calStart.get_date(), self.calEnd.get_date())
+        resident_objects(self.resident.Id, self.object.Id, self.calStart.get_date(), self.calEnd.get_date())
         messagebox.showinfo("Успешно", "Запрос на аренду отправлен")
         self.delegate_refresh_frame()
         self.parent.destroy()

@@ -1,20 +1,18 @@
 from tkinter import Frame, Button, LEFT, RIGHT
 
-from Models.object_market_place_model import get_free_object
-from Service.Helper.ObjectItem import ObjectPartial
-from Service.Helper.PaginataionList import PaginationList
-from Service.Helper.ResidentItem import ResidentPartial
-from Service.Helper.ResidentObjectItem import ResidentObjectPartial
-from Service.ORM.AvailableObject import get_available_object
-from Service.ORM.ResidentObject import get_resident_object
-from Views.Partial.Resident.Content.DocsFrame import DocsFrame
-from Views.Partial.Resident.Content.ProfileWidget import Profile
-from Models.resident_object import get_rent_object
+from Views.Pagination.PaginationItem.object_item import ObjectPartial
+from Views.Pagination.pagination_list import PaginationList
+from Views.Pagination.PaginationItem.resident_object_item import ResidentObjectPartial
+from Service.ORM.available_object import get_available_object
+from Service.ORM.resident_object import get_resident_object
+from Views.Partial.Resident.Content.docs_frame import DocsFrame
+from Views.Partial.Resident.Content.profile import Profile
 
 
 class ResidentMenu:
     def __init__(self, main_frame, user):
         self.resident = user.resident
+        self.master = main_frame
         self.content = Frame(main_frame)
         frame_menu = Frame(main_frame)
 
@@ -25,6 +23,8 @@ class ResidentMenu:
         Button(frame_menu, text="Профиль", command=self.profile_resident).pack(side=LEFT)
 
         Button(frame_menu, text="Документы", command=self.docs_frame).pack(side=LEFT)
+
+        Button(frame_menu, text="Выход", command=self.exit_profile).pack(side=LEFT)
 
         frame_menu.grid(row=0, column=0)
         self.content.grid(row=1, column=0)
@@ -41,13 +41,14 @@ class ResidentMenu:
 
     def free_object(self):
         self.destroy_widget()
-        free_object = [ObjectPartial(i) for i in get_available_object()]
+        free_object = [ObjectPartial(i, self.resident, self.free_object) for i in get_available_object()]
         PaginationList(self.content, free_object).grid(row=1, column=0)
         self.create_pagination_width()
 
     def resident_objects(self):
         self.destroy_widget()
-        rent_object = [ResidentObjectPartial(i) for i in get_resident_object(self.resident.Id)]
+        rent_object = [ResidentObjectPartial(i, self.resident, self.resident_objects)
+                       for i in get_resident_object(self.resident.Id)]
         PaginationList(self.content, rent_object).grid(row=1, column=0)
         self.create_pagination_width()
 
@@ -67,3 +68,8 @@ class ResidentMenu:
             Button(frame_pagination, text="<<").pack(side=LEFT)
             Button(frame_pagination, text=">>").pack(side=RIGHT)
             frame_pagination.grid(row=2, column=0)
+
+    def exit_profile(self):
+        self.master.master.destroy()
+        from Views.Common.authorization_window import AuthWindow
+        AuthWindow().mainloop()

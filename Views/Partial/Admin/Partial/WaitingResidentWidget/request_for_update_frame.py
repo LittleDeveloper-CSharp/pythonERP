@@ -12,6 +12,9 @@ class RequestForUpdateFrame(Frame):
 class _PartialRequest(Frame):
     def __init__(self, master, request):
         super().__init__(master)
+        if request is None:
+            Label(self, text="Новый").pack()
+            return
         Label(self, text=f"Логин: {request[1]}").pack()
         Label(self, text=f"Фамилия: {request[2]}").pack()
         Label(self, text=f"Имя: {request[3]}").pack()

@@ -2,13 +2,8 @@ import math
 from tkinter import Frame, Label, Button, LEFT, RIGHT
 
 
-class ConfigForPagination:
-    def __init__(self, name_item, config):
-        self.name_item = name_item
-
-
 class PaginationList(Frame):
-    def __init__(self, master, list_items, confing=None):
+    def __init__(self, master, list_items):
         super().__init__(master)
         if len(list_items) == 0:
             Label(self, text="Информация отсутствует").pack()
@@ -20,9 +15,6 @@ class PaginationList(Frame):
         self.list_items = list_items
         self.index_list = 0
         self.count_list = math.ceil(len(self.list_items) / self.max_items_on_list)
-
-        if confing is not None:
-            return
 
         self.fill_frame()
 
@@ -44,17 +36,33 @@ class PaginationList(Frame):
                     break
 
                 item = items[index]
+
                 item_place = Frame(main_content_frame)
-                Label(item_place, image=item.Photo).pack()
-                Label(item_place, text=item.Name).pack()
-                item_place.grid(row=i, column=j)
+                photo_place = Label(item_place, image=item.Photo)
+                text = Label(item_place, text=item.Name)
+
+                if hasattr(item, "config"):
+                    if "frame" in item.config:
+                        item_place.config(item.config.get("frame"))
+                    if "photo" in item.config:
+                        photo_place.config(item.config.get("photo"))
+                    if "label" in item.config:
+                        text.config(item.config.get("label"))
+
+                photo_place.pack(padx=10, pady=(10, 0))
+                text.pack(padx=10, pady=(10, 0))
+
+                if hasattr(item, "event"):
+                    Button(item_place, text=item.event[0], command=item.event[1]).pack()
+
+                item_place.grid(row=i, column=j, padx=10, pady=10)
                 index += 1
 
         main_content_frame.grid(row=1, column=0)
         self.__create_panel_control()
 
     def __create_panel_control(self):
-        if self.count_list == 1:
+        if self.count_list == 1 and len(self.list_items) <= self.max_count_column:
             return
 
         frame_size_panel = Frame(self)

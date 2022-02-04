@@ -1,17 +1,29 @@
 from tkinter import Frame, Entry, Label, Button, filedialog
+
 from Models.resident_object import edit_profile
-from shutil import copyfile
+
+from Service.copy_file import copy_file
+from Service.dir import create_doc_dir
+from Service.opener_photo import set_photo
 
 
 class EditProfileResidentFrame(Frame):
-    def __init__(self, parent, resident, refresh_frame):
+    def __init__(self, parent, resident, refresh_frame=None):
         Frame.__init__(self, parent)
         self.resident = resident
         self.parent = parent
+        self.file_path = None
 
         self.delegate_refresh_frame = refresh_frame
 
         frame_info = Frame(self)
+
+        if resident.Id == 0:
+            frame_login = Frame(frame_info)
+            Label(frame_login, text="Логин").grid(row=0, column=0)
+            self.entry_login = Entry(frame_login)
+            self.entry_login.grid(row=0, column=1)
+            frame_login.pack()
 
         frame_last_name = Frame(frame_info)
         Label(frame_last_name, text="Отчество").grid(row=0, column=0)
@@ -59,9 +71,12 @@ class EditProfileResidentFrame(Frame):
 
         Button(frame_info, text="Принять изменения", command=self.__accept_edit).pack()
 
-        image = self.__set_photo()
-
         frame_photo = Frame(self)
+
+        if resident.Id != 0:
+            self.__fill_entry()
+
+        image = set_photo(resident.photo_path)
         self.panel = Label(frame_photo)
         self.panel.pack()
         self.panel.configure(image=image)
@@ -69,8 +84,6 @@ class EditProfileResidentFrame(Frame):
         Button(frame_photo, text="Изменить фото", command=self.__ask_open_photo).pack()
 
         frame_photo.grid(row=0, column=0)
-
-        self.__fill_entry()
 
     def __fill_entry(self):
         self.entry_phone.insert(0, self.resident.phone)
@@ -81,6 +94,9 @@ class EditProfileResidentFrame(Frame):
         self.entry_first_name.insert(0, self.resident.first_name)
 
     def __accept_edit(self):
+        if self.resident.Id == 0:
+            self.resident.login = self.entry_login.get()
+
         self.resident.phone = self.entry_phone.get()
         self.resident.email = self.entry_email.get()
         self.resident.inn = self.entry_inn.get()
@@ -88,33 +104,22 @@ class EditProfileResidentFrame(Frame):
         self.resident.last_name = self.entry_last_name.get()
         self.resident.first_name = self.entry_first_name.get()
 
+        if self.resident.Id == 0:
+            create_doc_dir(self.resident.login)
+
+        if self.file_path is not None:
+            file_name = f'{self.resident.first_name + self.resident.last_name}.{self.file_path.split(".")[1]}'
+            self.resident.photo_path = f"../Resources/image/{file_name}"
+            copy_file(self.file_path, "../Resources/image/", file_name)
+
         edit_profile(self.resident, self.entry_password.get())
-        self.delegate_refresh_frame()
+        if self.delegate_refresh_frame is not None:
+            self.delegate_refresh_frame()
         self.parent.destroy()
 
     def __ask_open_photo(self):
-        self.resident.photo_path = filedialog.askopenfilename()
+        self.file_path = filedialog.askopenfilename()
 
-        new_photo_path = f'../Resources/image/{self.resident.first_name+self.resident.last_name}.' \
-                         f'{self.resident.photo_path.split(".")[1]}'
-
-        copyfile(self.resident.photo_path, new_photo_path)
-        self.resident.photo_path = new_photo_path
-        image = self.__set_photo()
+        image = set_photo(self.file_path)
         self.panel.configure(image=image)
         self.panel.image = image
-
-    def __set_photo(self):
-        import os
-        from PIL import Image, ImageTk
-        photo_path = self.resident.photo_path
-
-        if photo_path is None:
-            photo_path = '../Resources/image/emptyPeople.png'
-
-        path = os.path.abspath(photo_path)
-
-        source_photo = Image.open(path)
-        photo = source_photo.resize((200, 200))
-        image = ImageTk.PhotoImage(photo)
-        return image

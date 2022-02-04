@@ -36,7 +36,15 @@ def cancellation_rent(resident_id, object_id):
     conn.commit()
 
 
+def create_profile(resident, password):
+    cur.execute("INSERT OR IGNORE INTO user (login, password, isActive, idRole) VALUES (?, ?, 0, 2)", (resident.login, password))
+    conn.commit()
+
+
 def edit_profile(resident_info, password):
+    if resident_info.Id == 0:
+        create_profile(resident_info, password)
+
     flag = cur.execute('SELECT id FROM resident_wait_update WHERE login = ?', (resident_info.login,)).fetchone()
     if flag is None:
         cur.execute("INSERT INTO resident_wait_update (login, lastName, "

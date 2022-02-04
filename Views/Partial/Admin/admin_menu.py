@@ -2,12 +2,12 @@ from tkinter import Frame, Button, LEFT
 
 from DTO.request import RequestForRent, RequestForUpdate
 from Models.admin_model import get_wait_rent_list, get_wait_update_list
-from Service.Helper.ObjectItem import ObjectPartial
-from Service.Helper.PaginataionList import PaginationList
-from Service.Helper.ResidentItem import ResidentPartial
-from Service.ORM.Objects import get_objects
-from Service.ORM.ResidentsList import get_residents_list
-from Views.Partial.Admin.Partial.WaitingResidentFrame import WaitingResident
+from Views.Pagination.PaginationItem.object_item import ObjectPartial
+from Views.Pagination.pagination_list import PaginationList
+from Views.Pagination.PaginationItem.resident_item import ResidentPartial
+from Service.ORM.objects import get_objects
+from Service.ORM.residents_list import get_residents_list
+from Views.Partial.Admin.Partial.waiting_resident_frame import WaitingResident
 
 
 class AdminMenu:
@@ -20,6 +20,8 @@ class AdminMenu:
         Button(frame_menu, text="Резиденты", command=self.place_residents).pack(side=LEFT)
 
         Button(frame_menu, text="Комната ожидания", command=self.wait_resident).pack(side=LEFT)
+
+        Button(frame_menu, text="Выход", command=self.exit_profile).pack(side=LEFT)
 
         frame_menu.grid(row=0, column=0)
 
@@ -45,5 +47,9 @@ class AdminMenu:
         self.clear_content_frame()
         request = (*[RequestForRent(i) for i in get_wait_rent_list()],
                    *[RequestForUpdate(i) for i in get_wait_update_list()])
-        WaitingResident(self.content, request).grid(row=1, column=0)
+        WaitingResident(self.content, request, self.wait_resident).grid(row=1, column=0)
 
+    def exit_profile(self):
+        self.master.master.destroy()
+        from Views.Common.authorization_window import AuthWindow
+        AuthWindow().mainloop()
