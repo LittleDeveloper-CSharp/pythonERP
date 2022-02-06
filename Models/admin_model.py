@@ -53,8 +53,33 @@ def update_property_rent(rent_id, status):
 
 def accept_update_resident(resident, status):
     if status == 1:
-        cur.execute(f"DELETE FROM resident WHERE login = '{resident.login}'")
-        cur.execute(f"INSERT INTO resident SELECT * FROM resident_wait_update WHERE id = '{resident.Id}'")
+        is_update = cur.execute("SELECT id FROM resident WHERE login = ?", (resident.login, )).fetchone() \
+                    is not None
+        if is_update:
+            cur.execute("UPDATE resident SET lastName = ?, firstName = ?, patronymic = ?, inn = ?, "
+                        "phone = ?, photoPath = ?, email = ? WHERE login = ?",
+                        (resident.last_name, resident.first_name, resident.patronymic, resident.inn,
+                         resident.phone, resident.photo_path, resident.email, resident.login))
+        else:
+            cur.execute(f"INSERT INTO resident SELECT * FROM resident_wait_update WHERE id = '{resident.Id}'")
+
         cur.execute(f"UPDATE user SET isActive = 1 WHERE login = '{resident.login}'")
     cur.execute(f"DELETE FROM resident_wait_update WHERE id = '{resident.Id}'")
+    conn.commit()
+
+
+def delete_object(object_id):
+    cur.execute("DELETE FROM object WHERE id = '?'", (object_id, ))
+    conn.commit()
+
+
+def update_object(object_info):
+    cur.execute("UPDATE object SET name = ?, price = ?, area = ?, photoPath = ? WHERE id = ?",
+                (object_info.Name, object_info.rentPrice, object_info.Area, object_info.photo_path, object_info.Id))
+    conn.commit()
+
+
+def create_object(object_info):
+    cur.execute("INSERT INTO object (name, price, area, photoPath, idStatus) VALUES (?, ?, ?, ?, ?)",
+                (object_info.Name, object_info.rentPrice, object_info.Area, object_info.photo_path, 4))
     conn.commit()

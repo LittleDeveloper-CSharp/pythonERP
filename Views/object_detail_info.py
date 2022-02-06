@@ -54,7 +54,9 @@ class DetailsInfo(Frame):
 
     def widgets(self):
         photo = set_photo(self.object.photo_path)
-        Label(self.frame_info, image=photo).pack()
+        place_photo = Label(self.frame_info, image=photo)
+        place_photo.image = photo
+        place_photo.pack()
         Label(self.frame_info, text=self.object.Name).pack()
 
         if self.object.idStatus == 4:

@@ -1,5 +1,6 @@
 from tkinter import Frame, Button, LEFT
 
+from DTO.object_market_place import ObjectModel
 from DTO.request import RequestForRent, RequestForUpdate
 from Models.admin_model import get_wait_rent_list, get_wait_update_list
 from Views.Pagination.PaginationItem.object_item import ObjectPartial
@@ -41,7 +42,14 @@ class AdminMenu:
     def object_list(self):
         self.clear_content_frame()
         objects = get_objects()
-        PaginationList(self.content, [ObjectPartial(i) for i in objects]).grid(row=1, column=0)
+        new_object = ObjectModel()
+        new_object.Id = None
+        new_object.Name = "Добавить"
+        new_object.photo_path = "../Resources/image/znak-plius.png"
+
+        pagination_item = [ObjectPartial(i, delegate_refresh=self.object_list) for i in objects]
+        pagination_item.insert(0, ObjectPartial(new_object, delegate_refresh=self.object_list))
+        PaginationList(self.content, pagination_item).grid(row=1, column=0)
 
     def wait_resident(self):
         self.clear_content_frame()

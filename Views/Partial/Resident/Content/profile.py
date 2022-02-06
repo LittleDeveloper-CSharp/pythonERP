@@ -2,6 +2,7 @@ from tkinter import Label, Button, Frame, Toplevel
 
 from DTO.resident import Resident
 from Models.object_market_place_model import get_details_info
+from Service.opener_photo import set_photo
 from Views.Partial.Resident.Content.edit_profile_resident import EditProfileResidentFrame
 
 
@@ -11,9 +12,13 @@ class Profile(Frame):
         self.delegate_refresh_frame = refresh_frame
         resident = Resident().set_value(get_details_info(resident_id))
         photo_path = resident.photo_path
-        if photo_path is None:
-            photo_path = '../Resources/image/emptyPeople.png'
-        self.__set_photo(photo_path)
+
+        image = set_photo(photo_path)
+        panel = Label(self)
+        panel.grid(row=0, column=0)
+        panel.configure(image=image)
+        panel.image = image
+
         frame_information = Frame(self)
         Label(frame_information, text=f"Логин: {resident.login}").pack()
         Label(frame_information, text=f"Фамилия: {resident.last_name}").pack()
@@ -26,18 +31,6 @@ class Profile(Frame):
             Button(frame_information, text="Редактировать", command=lambda: self.__edit_profile_click(resident)).pack()
 
         frame_information.grid(row=0, column=1)
-
-    def __set_photo(self, path):
-        import os
-        from PIL import Image, ImageTk
-        path = os.path.abspath(path)
-        source_photo = Image.open(path)
-        photo = source_photo.resize((200, 200))
-        image = ImageTk.PhotoImage(photo)
-        panel = Label(self)
-        panel.grid(row=0, column=0)
-        panel.configure(image=image)
-        panel.image = image
 
     def __edit_profile_click(self, resident):
         edit_modal = Toplevel(self)
