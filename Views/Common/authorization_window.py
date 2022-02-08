@@ -4,7 +4,6 @@ from tkinter import messagebox
 from DTO.resident import Resident
 from Models.authorization_model import authorization_user
 from Views.Partial.Resident.Content.edit_profile_resident import EditProfileResidentFrame
-from Views.Partial.Resident.Content.profile import Profile
 
 
 class AuthWindow(Tk):
@@ -44,7 +43,7 @@ class AuthWindow(Tk):
 
     def _regi(self):
         create_user = Toplevel(self)
-        EditProfileResidentFrame(create_user, Resident()).pack()
+        EditProfileResidentFrame(create_user, Resident(), True).pack()
         create_user.grab_set()
 
 

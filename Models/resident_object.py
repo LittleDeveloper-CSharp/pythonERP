@@ -10,7 +10,7 @@ def get_rent_object(resident_id):
                        f" WHERE idResident = {resident_id} and o.idStatus != 3 and r.idStatus != 3").fetchall()
 
 
-def resident_objects(resident_id, object_id, date_start_srt, date_end_srt):
+def resident_objects(resident_id, object_id, date_start_srt, date_end_srt, reason):
     cur.execute(f"UPDATE object SET idStatus = '2' WHERE id = '{object_id}'")
 
     rent_day = cur.execute(f"SELECT price FROM object WHERE id = '{object_id}'").fetchone()[0]
@@ -24,8 +24,9 @@ def resident_objects(resident_id, object_id, date_start_srt, date_end_srt):
     count_days = date_end - date_start
     rent_sum = count_days.days * rent_day
 
-    cur.execute(f"INSERT INTO rent (idResident, idObject, dateStart, dateEnd, idStatus, totalSum) "
-                f"VALUES ('{resident_id}', '{object_id}', '{date_start_srt}', '{date_end_srt}', '2', '{rent_sum}')")
+    cur.execute(f"INSERT INTO rent (idResident, idObject, dateStart, dateEnd, idStatus, totalSum, purposeOfTheLease) "
+                f"VALUES ('{resident_id}', '{object_id}', '{date_start_srt}', '{date_end_srt}', '2', '{rent_sum}', "
+                f"'{reason}')")
     conn.commit()
 
 
@@ -37,7 +38,8 @@ def cancellation_rent(resident_id, object_id):
 
 
 def create_profile(resident, password):
-    cur.execute("INSERT OR IGNORE INTO user (login, password, isActive, idRole) VALUES (?, ?, 0, 2)", (resident.login, password))
+    cur.execute("INSERT OR IGNORE INTO user (login, password, isActive, idRole) VALUES (?, ?, 0, 2)", (resident.login,
+                                                                                                       password))
     conn.commit()
 
 
@@ -57,6 +59,18 @@ def edit_profile(resident_info, password):
     if password != '' and not password.isspace():
         cur.execute(f"UPDATE user SET password = '{password}' WHERE login = '{resident_info.login}'")
 
+    conn.commit()
+
+
+def get_details_info(resident_id):
+    return cur.execute("SELECT * FROM resident_details_info WHERE resident_id = ?", (resident_id, )).fetchone()
+
+
+def create_details_info(resident_details_info):
+    cur.execute("INSERT INTO resident_details_info"
+                " (resident_id, bik, bank, kpp, address, payAcc, 'index', corAcc, ipName, birthday"
+                ",passport, passport_issued, passport_date_issued, certificate_number)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", resident_details_info)
     conn.commit()
 
 

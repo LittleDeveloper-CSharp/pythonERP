@@ -26,6 +26,11 @@ class DetailsInfo(Frame):
             self.calStart.pack()
             Button(self.frame_first_step_rent, text="Подтвердить", command=self.select_end_date).pack()
             Label(self.frame_second_step_rent, text="Конец аренды").pack()
+            frame_reason = Frame(self.frame_second_step_rent)
+            Label(frame_reason, text="Помещения для").pack(side=LEFT)
+            self.entry_reason = Entry(frame_reason)
+            self.entry_reason.pack(side=RIGHT)
+            frame_reason.pack()
             self.calEnd = Calendar(master=self.frame_second_step_rent, locale="ru_RU")
             self.calEnd.pack()
             Button(self.frame_second_step_rent, text="Подтвердить", command=self.request_rent).pack()
@@ -84,7 +89,12 @@ class DetailsInfo(Frame):
         return
 
     def request_rent(self):
-        resident_objects(self.resident.Id, self.object.Id, self.calStart.get_date(), self.calEnd.get_date())
+        if self.entry_reason.get() == '' or self.entry_reason.get().isspace():
+            messagebox.showerror("Ошибка", "Не указано для чего помещение снимается!")
+            return
+
+        resident_objects(self.resident.Id, self.object.Id, self.calStart.get_date(), self.calEnd.get_date(),
+                         self.entry_reason.get())
         messagebox.showinfo("Успешно", "Запрос на аренду отправлен")
         self.delegate_refresh_frame()
         self.parent.destroy()

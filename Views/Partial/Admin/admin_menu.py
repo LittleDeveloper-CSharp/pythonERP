@@ -8,6 +8,7 @@ from Views.Pagination.pagination_list import PaginationList
 from Views.Pagination.PaginationItem.resident_item import ResidentPartial
 from Service.ORM.objects import get_objects
 from Service.ORM.residents_list import get_residents_list
+from Views.Partial.Admin.Partial.report_frame import ReportFrame
 from Views.Partial.Admin.Partial.waiting_resident_frame import WaitingResident
 
 
@@ -22,6 +23,8 @@ class AdminMenu:
 
         Button(frame_menu, text="Комната ожидания", command=self.wait_resident).pack(side=LEFT)
 
+        Button(frame_menu, text="Отчеты", command=self.report).pack(side=LEFT)
+
         Button(frame_menu, text="Выход", command=self.exit_profile).pack(side=LEFT)
 
         frame_menu.grid(row=0, column=0)
@@ -29,6 +32,10 @@ class AdminMenu:
         self.content.grid(row=1, column=0)
 
         self.place_residents()
+
+    def report(self):
+        self.clear_content_frame()
+        ReportFrame(self.content).grid(row=1, column=0)
 
     def clear_content_frame(self):
         for item in self.content.winfo_children():

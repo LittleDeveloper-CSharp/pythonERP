@@ -21,7 +21,7 @@ class RequestRentFrame(Frame):
     def _open_resident_info(self):
         detail_info_resident = Toplevel()
         detail_info_resident.grab_set()
-        Profile(detail_info_resident, self._object_rent.resident_id).grid(row=0, column=0)
+        Profile(detail_info_resident, self._object_rent.resident_id, False).grid(row=0, column=0)
         resident_login = get_resident(self._object_rent.resident_id)[1]
         DocsFrame(detail_info_resident, resident_login).grid(row=0, column=1)
 

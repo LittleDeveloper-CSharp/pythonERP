@@ -1,5 +1,6 @@
-from tkinter import Frame, Button, LEFT, RIGHT
+from tkinter import Frame, Button, LEFT, RIGHT, messagebox
 
+from Models.resident_object import get_details_info
 from Views.Pagination.PaginationItem.object_item import ObjectPartial
 from Views.Pagination.pagination_list import PaginationList
 from Views.Pagination.PaginationItem.resident_object_item import ResidentObjectPartial
@@ -16,20 +17,30 @@ class ResidentMenu:
         self.content = Frame(main_frame)
         frame_menu = Frame(main_frame)
 
-        Button(frame_menu, text="Главная", command=self.resident_objects).pack(side=LEFT)
-
-        Button(frame_menu, text="Доступные помещения", command=self.free_object).pack(side=LEFT)
-
-        Button(frame_menu, text="Профиль", command=self.profile_resident).pack(side=LEFT)
-
-        Button(frame_menu, text="Документы", command=self.docs_frame).pack(side=LEFT)
-
-        Button(frame_menu, text="Выход", command=self.exit_profile).pack(side=LEFT)
+        is_active_acc = get_details_info(self.resident.Id)
 
         frame_menu.grid(row=0, column=0)
         self.content.grid(row=1, column=0)
 
-        self.resident_objects()
+        if is_active_acc is not None:
+
+            Button(frame_menu, text="Главная", command=self.resident_objects).pack(side=LEFT)
+
+            Button(frame_menu, text="Доступные помещения", command=self.free_object).pack(side=LEFT)
+
+        Button(frame_menu, text="Профиль", command=self.profile_resident).pack(side=LEFT)
+
+        if is_active_acc is not None:
+
+            Button(frame_menu, text="Документы", command=self.docs_frame).pack(side=LEFT)
+
+            self.resident_objects()
+        else:
+            self.profile_resident()
+            messagebox.showinfo("Ошибка", "Вы не заполнили дополнительную информацию об аккаунте, "
+                                          "как заполните, перезайдите в приложение")
+
+        Button(frame_menu, text="Выход", command=self.exit_profile).pack(side=LEFT)
 
     def destroy_widget(self):
         for item in self.content.winfo_children():
@@ -37,7 +48,7 @@ class ResidentMenu:
 
     def profile_resident(self):
         self.destroy_widget()
-        Profile(self.content, self.resident.Id, self.profile_resident).grid(row=1, column=0)
+        Profile(self.content, self.resident.Id, True, self.profile_resident).grid(row=1, column=0)
 
     def free_object(self):
         self.destroy_widget()
