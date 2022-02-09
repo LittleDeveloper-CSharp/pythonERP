@@ -41,6 +41,28 @@ def get_entity_for_report(date_start, date_end, entity):
                        ).fetchall()
 
 
+def get_object_for_report(status):
+    return cur.execute("SELECT name, price, area, title, cadastralNumber FROM object "
+                       " INNER JOIN Status ON object.idStatus = Status.id"
+                       " LEFT JOIN rent ON rent.idObject = object.id WHERE"
+                       f" object.idStatus in {status}").fetchall()
+
+
+def get_rent_for_report(date_start, date_end):
+    date_start = __convert_date_for_sqlite(date_start)
+    date_end = __convert_date_for_sqlite(date_end)
+
+    return cur.execute("SELECT resident.lastName || ' ' || resident.firstName || ' ' || resident.patronymic"
+                       " as fullname, object.name, dateStart, dateEnd, totalSum, title, purposeOfTheLease FROM rent"
+                       " INNER JOIN resident ON resident.id = rent.idResident"
+                       " INNER JOIN object ON object.id = rent.idObject"
+                       " INNER JOIN Status ON rent.idStatus = Status.id WHERE"
+                       " date(substr(dateStart, 7) || '-' || substr(dateStart, 4, 2) || '-' ||"
+                       " substr(dateStart, 1, 2)) >= ? and"
+                       " date(substr(dateStart, 7) || '-' || substr(dateStart, 4, 2) || '-' ||"
+                       " substr(dateStart, 1, 2)) <= ?", (date_start, date_end)).fetchall()
+
+
 def get_wait_rent_list():
     return cur.execute("SELECT r.id, res.lastName || ' ' || res.firstName FROM rent as r "
                        "INNER JOIN resident as res ON res.id = r.idResident "
