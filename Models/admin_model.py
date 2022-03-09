@@ -134,7 +134,7 @@ def update_property_rent(rent_id, status):
         doc.render(doc_context)
         doc.save(f"{root_path}{doc_rent.path}")
 
-        doc_rent.path = f"..{doc_rent}"
+        doc_rent.path = f"..{doc_rent.path}"
 
         create_doc_for_user(doc_rent)
 
